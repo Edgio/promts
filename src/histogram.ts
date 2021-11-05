@@ -1,13 +1,13 @@
 /**
- * Copyright Verizon Media, Licensed under the terms of the MIT license.
+ * Copyright EdgeCast, Licensed under the terms of the MIT license.
  * See LICENSE file in project root for terms.
  */
 
 import { Counter } from '../mod.ts';
 import { Metric, SUPRESS_HEADER, Labels } from './types.ts';
 
-// 50  100  200  400  600 1000 ... ms
-const defaultBuckets = [0.1, 0.2, 0.4, 0.6, 1, 3, 8, 20, 60, 120];
+//                      10   100  200  400  600 1000 ... ms
+const defaultBuckets = [0.01, 0.1, 0.2, 0.4, 0.6, 1, 3, 8, 20, 60, 120];
 
 export class Histogram extends Metric {
     private buckets: number[];
@@ -23,8 +23,8 @@ export class Histogram extends Metric {
     ) {
         super(name, labels, help);
         this.buckets = buckets;
-        this.sum = new Counter(name + "_sum");
-        this.count = new Counter(name + "_count");
+        this.sum = new Counter(name + "_sum", labels);
+        this.count = new Counter(name + "_count", labels);
         const bucketName = name + "_bucket";
 
         this.counters = buckets.map((n) => {
@@ -64,7 +64,6 @@ export class Histogram extends Metric {
         for (let i = 0; i < this.buckets.length; i++) {
             if (value <= this.buckets[i]) {
                 this.counters[i].inc();
-                return;
             }
         }
         this.counters.slice(-1)[0].inc();

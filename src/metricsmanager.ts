@@ -1,5 +1,5 @@
 /**
- * Copyright Verizon Media, Licensed under the terms of the MIT license.
+ * Copyright EdgeCast, Licensed under the terms of the MIT license.
  * See LICENSE file in project root for terms.
  */
 
@@ -86,7 +86,7 @@ class HistogramCollection extends MetricCollection<Histogram> {
 
     create(labels: Labels = {}): Histogram {
         const metric: Histogram = new Histogram(
-            super.name,
+            this.name,
             labels
         );
 
